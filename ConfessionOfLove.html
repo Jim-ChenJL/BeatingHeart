@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ff2d82">
+<title>心动宇宙 · 浪漫星空</title>
+<style>
+:root{
+ --primary:#ff3b93;
+ --hot:#ff176f;
+ --rose:#ff8bc5;
+ --white:#fff7fb;
+ --glass:rgba(255,255,255,.075);
+ --line:rgba(255,170,211,.26);
+ --glow:0 0 24px #ff318855;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020005;color:#fff;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+body{touch-action:manipulation}
+#app{position:fixed;inset:0;overflow:hidden;background:
+radial-gradient(ellipse at 50% 42%,#ff5aa728 0%,#a40e4d20 28%,transparent 58%),
+radial-gradient(circle at 12% 85%,#ff168e18,transparent 38%),
+radial-gradient(circle at 88% 18%,#ff80bd16,transparent 35%),
+#030005;
+}
+#nebula1{position:absolute;inset:-35%;background:
+conic-gradient(from 0deg,transparent 0 10%,#ff328d10 16%,transparent 24%,#ff75b512 36%,transparent 48%,#ff197d0e 62%,transparent 74%,#ff8ac710 86%,transparent);
+filter:blur(32px);animation:spin 34s linear infinite;opacity:0.75;will-change:transform}
+#nebula2{position:absolute;inset:-30%;background:
+conic-gradient(from 180deg,transparent 0 14%,#7a22ff0a 20%,transparent 32%,#ff48a010 42%,transparent 56%,#ff24830a 70%,transparent);
+filter:blur(26px);animation:spin 44s linear reverse infinite;opacity:0.5;will-change:transform}
+canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;will-change:transform}
+.grid{position:absolute;left:50%;top:50%;width:1100px;height:1100px;transform:translate(-50%,-50%);opacity:.11;
+background-image:linear-gradient(#ff8fc51a 1px,transparent 1px),linear-gradient(90deg,#ff8fc51a 1px,transparent 1px);
+background-size:48px 48px;
+mask-image:radial-gradient(circle,#000 0,transparent 72%);
+transform-origin:center;animation:grid 16s linear infinite;z-index:1;will-change:transform
+}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,transparent 52%,#000000aa 100%);z-index:4}
+
+.header{position:absolute;top:max(36px,env(safe-area-inset-top));left:0;right:0;text-align:center;z-index:6}
+.kicker{font-size:11px;letter-spacing:.52em;color:#ffd8ea;text-transform:uppercase;opacity:.92}
+h1{margin:12px 0 0;font-size:clamp(34px,9vw,72px);line-height:1;font-weight:850;letter-spacing:.14em;
+background:linear-gradient(90deg,#ffffff,#ffc2df,#ffabe0,#ffffff);
+-webkit-background-clip:text;color:transparent;
+filter:drop-shadow(0 0 18px #ff318855);
+}
+.subtitle{margin-top:14px;font-size:13px;letter-spacing:.26em;color:#ffd3e5;opacity:0.9}
+
+.scene{position:absolute;left:50%;top:49%;width:min(88vw,640px);height:min(88vw,640px);transform:translate(-50%,-50%);z-index:3}
+.ring{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%);
+border:1px solid #ff8fc555;
+box-shadow:0 0 60px #ff197a20,inset 0 0 45px #ff5aab12;
+will-change:transform
+}
+.r1{width:42%;height:42%;animation:breath 2.2s ease-in-out infinite}
+.r2{width:63%;height:63%;border-style:dashed;animation:orbit 20s linear infinite}
+.r3{width:83%;height:83%;opacity:.34;animation:orbit 34s linear reverse infinite}
+.r4{width:94%;height:94%;border:0.5px dashed #ffb4d830;opacity:0.18;animation:orbit 44s linear infinite}
+
+.ring:after{content:"";position:absolute;width:6px;height:6px;top:-3px;left:50%;border-radius:50%;background:#fff;box-shadow:0 0 14px 4px #ff56a9}
+
+.coreAura{position:absolute;left:50%;top:50%;width:38%;height:38%;transform:translate(-50%,-50%);border-radius:50%;
+background:#ff2d7d1c;
+box-shadow:0 0 80px 32px #ff227d24,0 0 140px 55px #ff197d12;
+animation:aura 1.1s ease-in-out infinite;will-change:transform
+}
+
+.heart{position:absolute;left:50%;top:50%;width:160px;height:160px;transform:translate(-50%,-44%) rotate(-45deg);
+animation:heartbeat 1.02s cubic-bezier(.2,.8,.3,1) infinite;
+filter:drop-shadow(0 0 10px #ff3a8e90);
+cursor:pointer;z-index:5;will-change:transform
+}
+.heart .shape,.heart:before,.heart:after{position:absolute;width:160px;height:160px;
+background:linear-gradient(145deg,#ffe2ef 0%,#ff9dce 14%,#ff3892 45%,#e60060 76%,#9b0040 100%)
+}
+.heart .shape{z-index:2}
+.heart:before,.heart:after{content:""}
+.heart:before{top:-80px;border-radius:50%}
+.heart:after{left:80px;border-radius:50%}
+
+.heart .shine{position:absolute;z-index:5;left:34px;top:14px;width:40px;height:80px;border-radius:50%;background:#ffffff99;filter:blur(7px);transform:rotate(45deg)}
+.heart .shine2{position:absolute;z-index:5;left:74px;top:78px;width:14px;height:28px;border-radius:50%;background:#ffffff77;filter:blur(4px);transform:rotate(45deg)}
+
+.love{position:absolute;left:50%;top:71%;transform:translateX(-50%);z-index:6;text-align:center;width:94%;pointer-events:none;text-shadow:0 0 12px #ff238580}
+.love strong{display:block;font-size:clamp(22px,5.6vw,36px);letter-spacing:.09em;font-weight:850}
+.love span{display:block;margin-top:10px;font-size:13px;letter-spacing:.22em;color:#ffd7e7}
+
+.heartbeat-line{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:16px;opacity:.92}
+.heartbeat-line i{width:3px;border-radius:12px;background:#ff9dca;box-shadow:0 0 6px #ff3b93;animation:eq .78s ease-in-out infinite alternate}
+.heartbeat-line i:nth-child(1){height:8px}
+.heartbeat-line i:nth-child(2){height:17px;animation-delay:.12s}
+.heartbeat-line i:nth-child(3){height:26px;animation-delay:.20s}
+.heartbeat-line i:nth-child(4){height:14px;animation-delay:.30s}
+.heartbeat-line i:nth-child(5){height:20px;animation-delay:.38s}
+.heartbeat-line i:nth-child(6){height:9px;animation-delay:.46s}
+
+.panel{position:absolute;bottom:max(28px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:10;width:min(94vw,480px);display:flex;flex-direction:column;align-items:center;gap:12px}
+.musicBtn{border:1px solid #ffafd5aa;background:linear-gradient(135deg,#ff3d8e40,#ff147020);color:white;border-radius:999px;padding:14px 28px;min-width:230px;font-size:15px;font-weight:650;letter-spacing:.06em;
+box-shadow:var(--glow);
+backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;transition:transform 0.18s ease
+}
+.musicBtn:active{transform:scale(.95)}
+.status{font-size:11px;color:#ffcadd;letter-spacing:.16em;opacity:.8}
+
+.toast{position:absolute;left:50%;top:80%;transform:translate(-50%,14px);z-index:20;padding:10px 18px;border:1px solid #ffabd338;border-radius:999px;background:#ff398c20;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:13px;opacity:0;transition:.35s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@keyframes heartbeat{
+0%,100%{transform:translate(-50%,-44%) rotate(-45deg) scale(1)}
+11%{transform:translate(-50%,-44%) rotate(-45deg) scale(1.20)}
+20%{transform:translate(-50%,-44%) rotate(-45deg) scale(.96)}
+31%{transform:translate(-50%,-44%) rotate(-45deg) scale(1.13)}
+46%{transform:translate(-50%,-44%) rotate(-45deg) scale(1)}
+}
+@keyframes aura{
+50%{transform:translate(-50%,-50%) scale(1.18);opacity:.70}
+}
+@keyframes breath{
+50%{transform:translate(-50%,-50%) scale(1.10);opacity:.70}
+}
+@keyframes orbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes grid{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes eq{to{transform:scaleY(.40);opacity:.45}}
+
+@media(max-width:520px){
+.heart,.heart .shape,.heart:before,.heart:after{width:124px;height:124px}
+.heart:before{top:-62px}
+.heart:after{left:62px}
+.heart .shine{left:26px;top:11px;width:32px;height:64px}
+.heart .shine2{left:58px;top:60px}
+.scene{top:47%}
+.love{top:70%}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="nebula1"></div>
+<div id="nebula2"></div>
+<div class="grid"></div>
+<canvas id="fx"></canvas>
+<div class="vignette"></div>
+
+<header class="header">
+<div class="kicker">A LITTLE UNIVERSE MADE FOR YOU</div>
+<h1 id="mainTitle">心动宇宙</h1>
+<div class="subtitle" id="subTitle">这一颗心，只为你扑通扑通</div>
+</header>
+
+<main class="scene" id="scene">
+<div class="ring r1"></div>
+<div class="ring r2"></div>
+<div class="ring r3"></div>
+<div class="ring r4"></div>
+<div class="coreAura"></div>
+<div class="heart" id="heart">
+<div class="shape"></div>
+<div class="shine"></div>
+<div class="shine2"></div>
+</div>
+</main>
+
+<div class="love">
+<strong id="loveMainText">致独一无二的你 ❤️</strong>
+<span id="copy">愿所有浪漫，都奔向你</span>
+<div class="heartbeat-line">
+<i></i><i></i><i></i><i></i><i></i><i></i>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<section class="panel">
+<button class="musicBtn" id="music">♡ 点我，让浪漫旋律响起</button>
+<div class="status" id="status">点击屏幕 · 爱心会回应你</div>
+</section>
+
+<audio id="audio" preload="metadata" loop>
+</div>
+
+<script>
+// ======================【配置区｜可自由调，注意不要把粒子数调太大】======================
+const CONFIG = {
+    title: "心动宇宙",
+    subTitle: "这一颗心，只为你扑通扑通",
+    loveHead: "致独一无二的你 ❤️",
+    audioSrc: "./music.mp3",
+    musicBtnText: "♡ 点我，让浪漫旋律响起",
+    musicPauseText: "❚❚ 暂停浪漫旋律",
+    musicResumeText: "♡ 继续播放浪漫旋律",
+    textPool: [
+        "愿所有浪漫，都奔向你",
+        "你是我心里的小宇宙 ✨",
+        "愿你永远闪闪发光",
+        "这一刻，心动百分百",
+        "爱意，比心跳还要多一点",
+        "漫天星光全部赠予你",
+        "宇宙的温柔向你奔赴而来"
+    ],
+    autoBurstPower: 0.45,
+    autoBurstInterval: 2800,
+    starCount: 180,
+    maxHeartParticleTotal: 70, // 全局爱心粒子硬上限，防止爆炸堆积卡死
+    burstMaxPerClick: 28,
+    maxMeteor:3,
+}
+// =================================================================================
+
+const A=document.getElementById("audio"),
+      B=document.getElementById("music"),
+      T=document.getElementById("toast"),
+      C=document.getElementById("fx"),
+      X=C.getContext("2d",{alpha:true}),
+      H=document.getElementById("heart"),
+      COPY=document.getElementById("copy"),
+      mainTitleDom = document.getElementById("mainTitle"),
+      subTitleDom = document.getElementById("subTitle"),
+      loveMainDom = document.getElementById("loveMainText");
+
+mainTitleDom.innerText = CONFIG.title;
+subTitleDom.innerText = CONFIG.subTitle;
+loveMainDom.innerText = CONFIG.loveHead;
+B.innerText = CONFIG.musicBtnText;
+A.src=CONFIG.audioSrc;
+
+let w=innerWidth,h=innerHeight,d=1;
+let stars=[],love=[],rings=[],meteors=[];
+let count=0;
+
+function resize(){
+    d=Math.min(window.devicePixelRatio||1,1.5); // 限制最高像素比，手机降负载
+    w=innerWidth;
+    h=innerHeight;
+    C.width=w*d;
+    C.height=h*d;
+    X.setTransform(d,0,0,d,0,0)
+}
+resize();
+addEventListener("resize",resize);
+
+// 星星初始化
+for(let i=CONFIG.starCount;i--;){
+    stars.push({
+        x:Math.random()*w,
+        y:Math.random()*h,
+        r:.2+Math.random()*1.4,
+        t:Math.random()*8,
+        s:.25+Math.random()*.75,
+        color:Math.random()>0.6?"#ffdee9":"#ffffff"
+    })
+}
+
+function spawnMeteor(){
+    if(meteors.length >= CONFIG.maxMeteor) return;
+    meteors.push({
+        x:Math.random()*w,
+        y:-60,
+        len:35+Math.random()*70,
+        speed:5+Math.random()*9,
+        angle:Math.PI/4 + Math.random()*0.35,
+        a:1
+    })
+}
+
+function makeHeart(x,y,s=1){
+    if(love.length >= CONFIG.maxHeartParticleTotal) return;
+    love.push({
+        x,y,s,
+        vx:(Math.random()-.5)*2.0,
+        vy:-0.9-Math.random()*2.4,
+        a:1,
+        r:(Math.random()-.5)*0.8,
+        g:0.008
+    })
+}
+
+function burst(x,y,power=1){
+    rings.push({x,y,r:2,a:1,power});
+    const total = Math.floor(CONFIG.burstMaxPerClick * power);
+    for(let i=0;i<total;i++) makeHeart(x+(Math.random()-.5)*18,y+(Math.random()-.5)*18,.12+Math.random()*.55*power)
+}
+
+// 爱心路径，预先写死，循环内无shadowBlur！！！
+function drawHeart(q){
+    X.save();
+    X.translate(q.x,q.y);
+    X.rotate(q.r);
+    X.globalAlpha=q.a;
+    const c = Math.random()>.4?"#ff71b3":"#ffc0dc";
+    X.fillStyle=c;
+    X.beginPath();
+    X.moveTo(0,9*q.s);
+    X.bezierCurveTo(-22*q.s,-8*q.s,-12*q.s,-28*q.s,0,-15*q.s);
+    X.bezierCurveTo(12*q.s,-28*q.s,22*q.s,-8*q.s,0,9*q.s);
+    X.fill();
+    X.restore()
+}
+
+function loop(){
+    X.clearRect(0,0,w,h);
+
+    // 星星
+    for(const s of stars){
+        s.t+=.008*s.s;
+        X.globalAlpha=.12+.36*Math.abs(Math.sin(s.t));
+        X.fillStyle=s.color;
+        X.beginPath();
+        X.arc(s.x,s.y,s.r,0,Math.PI*2);
+        X.fill()
+    }
+
+    // 爱心粒子
+    for(let i=love.length-1;i>=0;i--){
+        let q=love[i];
+        q.x+=q.vx;
+        q.y+=q.vy;
+        q.vy+=q.g;
+        q.a-=.011;
+        drawHeart(q);
+        if(q.a<=0) love.splice(i,1)
+    }
+
+    // 扩散光环
+    for(let i=rings.length-1;i>=0;i--){
+        let q=rings[i];
+        q.r+=5*q.power;
+        q.a-=.030;
+        X.globalAlpha=q.a;
+        X.strokeStyle="#ffb0d6";
+        X.lineWidth=1.8*q.power;
+        X.beginPath();
+        X.arc(q.x,q.y,q.r,0,Math.PI*2);
+        X.stroke();
+        if(q.a<=0) rings.splice(i,1)
+    }
+
+    // 流星
+    for(let i=meteors.length-1;i>=0;i--){
+        const m = meteors[i];
+        const dx = Math.cos(m.angle)*m.speed;
+        const dy = Math.sin(m.angle)*m.speed;
+        m.x += dx;
+        m.y += dy;
+        m.a -=0.012;
+        X.save();
+        X.globalAlpha=m.a;
+        X.strokeStyle="#ffd7e8";
+        X.lineWidth=1.6;
+        X.beginPath();
+        X.moveTo(m.x,m.y);
+        X.lineTo(m.x - Math.cos(m.angle)*m.len, m.y - Math.sin(m.angle)*m.len);
+        X.stroke();
+        X.restore();
+        if(m.a <= 0 || m.y>h+80) meteors.splice(i,1)
+    }
+
+    requestAnimationFrame(loop)
+}
+loop();
+
+setInterval(()=>{
+    if(Math.random()>0.55) spawnMeteor()
+},2800)
+
+let toastTimer=null;
+function toast(t){
+    T.textContent=t;
+    T.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>T.classList.remove("show"),1400)
+}
+
+async function startMusic(){
+    try{
+        await A.play();
+        B.textContent=CONFIG.musicPauseText;
+        document.getElementById("status").textContent="正在播放 · 把浪漫交给旋律"
+    }catch(e){
+        toast("浏览器拦截了播放，请再点一次 ♡")
+    }
+}
+B.onclick=()=>{
+    if(A.paused){
+        startMusic()
+    }else{
+        A.pause();
+        B.textContent=CONFIG.musicResumeText
+    }
+}
+
+function interact(px,py){
+    count++;
+    const power = count%3===0?1.4:1;
+    burst(px,py,power);
+    H.style.animationDuration=Math.max(.44,1.02-count*.013)+"s";
+    COPY.textContent=CONFIG.textPool[count % CONFIG.textPool.length];
+    if(navigator.vibrate && count%4===0) navigator.vibrate([8,25]);
+    if(count%7===0) toast("心动暴击 × "+count)
+}
+
+addEventListener("pointerdown",e=>{
+    if(e.target.closest("button")) return;
+    interact(e.clientX,e.clientY)
+},{passive:true})
+
+H.addEventListener("pointerdown",e=>{
+    e.stopPropagation();
+    interact(e.clientX,e.clientY)
+},{passive:true})
+
+setInterval(()=>{
+    const r=H.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,CONFIG.autoBurstPower)
+},CONFIG.autoBurstInterval);
+</script>
+</body>
+</html>
